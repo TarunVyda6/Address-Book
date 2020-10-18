@@ -51,7 +51,7 @@ public class AddressBook {
 		switch (choice) {
 		case 1:
 			addContact(scanner, addressBook);
-			break;
+			break; 
 		case 2:
 			editContact(scanner, addressBook);
 			break;
@@ -65,13 +65,13 @@ public class AddressBook {
 	}
 
 	/**
-	 * @param in
+	 * @param scanner
 	 * @param addressBook
 	 */
-	private static void viewAllContacts(Scanner in, Map<String, ContactDetails> addressBook) {
+	private static void viewAllContacts(Scanner scanner, Map<String, ContactDetails> addressBook) {
 		if (addressBook.isEmpty() || addressBook == null) {
 			System.out.println("No contacts to view");
-			ContactsOperation(in, addressBook);
+			ContactsOperation(scanner, addressBook);
 		} else {
 			for (Entry<String, ContactDetails> s : addressBook.entrySet()) {
 				System.out.println(s);

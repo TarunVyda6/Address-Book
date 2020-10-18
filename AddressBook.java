@@ -20,21 +20,44 @@ public class AddressBook {
 	 * @param scanner
 	 */
 	private static void addressBookOperation(Scanner scanner) {
+		System.out.println("Press 1 to Add an address book");
+		System.out.println("Press 2 to View all address book");
+		System.out.println("Press 3 to do operation in an address book");
 		Map<String, ContactDetails> addressBook = new HashMap<>();
-		System.out.println("Enter Address book name");
-		String bookName = scanner.nextLine();
-		if (addressBooksMap.containsKey(bookName)) {
-			System.out.println("Book already exits!");
-		} else {
-			System.out.println("Book Added Successfully");
-			addressBooksMap.put(bookName, addressBook);
-		}
+		//
+		int res = Integer.parseInt(scanner.nextLine());
 
-		if (addressBooksMap.containsKey(bookName)) {
-			addressBook = addressBooksMap.get(bookName);
-			ContactsOperation(scanner, addressBook);
+		if (res == 1) {
+			System.out.println("Enter Address book name");
+			String bookName = scanner.nextLine();
+			if (addressBooksMap.containsKey(bookName)) {
+				System.out.println("Book already exits!");
+			} else {
+				System.out.println("Book Added Successfully");
+				addressBooksMap.put(bookName, addressBook);
+			}
+			addressBookOperation(scanner);
+		} else if (res == 2) {
+			if (addressBooksMap.isEmpty() || addressBooksMap == null) {
+				System.out.println("No book to view");
+			} else {
+				for (Entry<String, Map<String, ContactDetails>> s : addressBooksMap.entrySet()) {
+					System.out.println(s);
+				}
+			}
+			addressBookOperation(scanner);
+		} else if (res == 3) {
+			System.out.println("Enter Address book name");
+			String bookName = scanner.nextLine();
+			if (addressBooksMap.containsKey(bookName)) {
+				addressBook = addressBooksMap.get(bookName);
+				ContactsOperation(scanner, addressBook);
+			} else {
+				System.out.println("Contact does not exist");
+				addressBookOperation(scanner);
+			}
 		} else {
-			System.out.println("Contact does not exist");
+			addressBookOperation(scanner);
 		}
 	}
 
@@ -46,17 +69,25 @@ public class AddressBook {
 		System.out.println("Press 1 to Add a new contact");
 		System.out.println("Press 2 to Edit an existing contact");
 		System.out.println("Press 3 to Delete contact");
+		System.out.println("Press 4 to View All contact");
+		System.out.println("Press 5 for main menu");
 		int choice = Integer.parseInt(scanner.nextLine());
 
 		switch (choice) {
 		case 1:
 			addContact(scanner, addressBook);
-			break; 
+			break;
 		case 2:
 			editContact(scanner, addressBook);
 			break;
 		case 3:
 			deleteContact(scanner, addressBook);
+			break;
+		case 4:
+			viewAllContacts(scanner, addressBook, "contactop");
+			break;
+		case 5:
+			addressBookOperation(scanner);
 			break;
 		default:
 			System.out.println("Incorrect Selection");
@@ -68,7 +99,7 @@ public class AddressBook {
 	 * @param scanner
 	 * @param addressBook
 	 */
-	private static void viewAllContacts(Scanner scanner, Map<String, ContactDetails> addressBook) {
+	private static void viewAllContacts(Scanner scanner, Map<String, ContactDetails> addressBook, String operation) {
 		if (addressBook.isEmpty() || addressBook == null) {
 			System.out.println("No contacts to view");
 			ContactsOperation(scanner, addressBook);
@@ -77,28 +108,31 @@ public class AddressBook {
 				System.out.println(s);
 			}
 		}
+		if (operation == "contactop") {
+			ContactsOperation(scanner, addressBook);
+		}
 	}
 
 	/**
-	 * @param in
+	 * @param scanner
 	 * @param addressBook
 	 */
-	private static void editContact(Scanner in, Map<String, ContactDetails> addressBook) {
+	private static void editContact(Scanner scanner, Map<String, ContactDetails> addressBook) {
 		System.out.println("Please select name from the below list to edit contact details of the individual.");
-		viewAllContacts(in, addressBook);
+		viewAllContacts(scanner, addressBook, "editContactop");
 		System.out.println("Enter the first name and last name of the person to edit");
 		System.out.println("Enter First Name");
-		String firstName = in.nextLine();
+		String firstName = scanner.nextLine();
 		System.out.println("Enter Last Name");
-		String lastName = in.nextLine();
+		String lastName = scanner.nextLine();
 		if (addressBook.containsKey(firstName + lastName)) {
 			// result="Name already exits!";
 			ContactDetails editObj = addressBook.get(firstName + lastName);
 			System.out.println(
 					"Press 1 to edit address, 2 to edit city, 3 to edit state, 4 to edit zip, 5 to edit phone number, 6 to edit email, 0 to cancel editing");
-			int response = Integer.parseInt(in.nextLine());
+			int response = Integer.parseInt(scanner.nextLine());
 			System.out.println("Enter new value");
-			String editVar = in.nextLine();
+			String editVar = scanner.nextLine();
 			switch (response) {
 			case 0:
 				break;
@@ -129,13 +163,16 @@ public class AddressBook {
 		} else {
 			System.out.println("Contact doest not exist");
 		}
+		System.out.println("Press 0 for main menu");
 		System.out.println("Press 1 for submain menu");
 		System.out.println("Press 2 to edit another contact");
-		int inp = Integer.parseInt(in.nextLine());
-		if (inp == 1) {
-			ContactsOperation(in, addressBook);
+		int inp = Integer.parseInt(scanner.nextLine());
+		if (inp == 0) {
+			addressBookOperation(scanner);
+		} else if (inp == 1) {
+			ContactsOperation(scanner, addressBook);
 		} else if (inp == 2) {
-			editContact(in, addressBook);
+			editContact(scanner, addressBook);
 		}
 
 	}
@@ -178,7 +215,7 @@ public class AddressBook {
 			System.out.println("Contact Added Successfully");
 			addressBook.put(firstName + lastName, add);
 		}
-
+		System.out.println("Press 0 for main menu");
 		System.out.println("Press 1 for submain menu");
 		System.out.println("Press 2 to add another contact");
 		int inp = Integer.parseInt(scanner.nextLine());
@@ -197,7 +234,7 @@ public class AddressBook {
 	 */
 	private static void deleteContact(Scanner scanner, Map<String, ContactDetails> addressBook) {
 		System.out.println("Please select name from the below list to delete contact details of the individual.");
-		viewAllContacts(scanner, addressBook);
+		viewAllContacts(scanner, addressBook, "deleteContactop");
 		System.out.println("Enter the first name and last name of the person to delete contact");
 		System.out.println("Enter First Name");
 		String firstName = scanner.nextLine();
@@ -215,7 +252,7 @@ public class AddressBook {
 		} else {
 			System.out.println("Contact does not exist");
 		}
-
+		System.out.println("Press 0 for main menu");
 		System.out.println("Press 1 for submain menu");
 		System.out.println("Press 2 to delete another contact");
 		int inp = Integer.parseInt(scanner.nextLine());

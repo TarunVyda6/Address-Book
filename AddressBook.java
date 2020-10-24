@@ -157,7 +157,6 @@ public class AddressBook {
 			default:
 				System.out.println("Incorrect selection");
 			}
-
 			addressBook.put(firstName + lastName, editObj);
 			System.out.println("Contact details edited successfully");
 		} else {
@@ -209,7 +208,9 @@ public class AddressBook {
 		add.setPhoneNumber(phoneNumber);
 		add.setEmail(email);
 
-		if (addressBook.containsKey(firstName + lastName)) {
+		ArrayList<ContactDetails> contactDetailsList = new ArrayList<ContactDetails>(addressBook.values());
+
+		if (contactDetailsList.stream().anyMatch(contact -> contact.equals(add))) {
 			System.out.println("Name already exits!");
 		} else {
 			System.out.println("Contact Added Successfully");

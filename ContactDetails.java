@@ -1,7 +1,10 @@
 package com.addressbook;
 
-public class ContactDetails 
-{
+/**
+ * @author Tarun Vyda
+ *
+ */
+public class ContactDetails {
 	private String firstName;
 
 	private String lastName;
@@ -18,93 +21,157 @@ public class ContactDetails
 
 	private String email;
 
-	public String getFirstName() 
-	{
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) 
-	{
+	/**
+	 * @param firstName
+	 *            the firstName to set
+	 */
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String getLastName() 
-	{
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) 
-	{
+	/**
+	 * @param lastName
+	 *            the lastName to set
+	 */
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-	public String getAddress() 
-	{
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address)
-	{
+	/**
+	 * @param address
+	 *            the address to set
+	 */
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	public String getCity() 
-	{
+	/**
+	 * @return the city
+	 */
+	public String getCity() {
 		return city;
 	}
 
-	public void setCity(String city) 
-	{
+	/**
+	 * @param city
+	 *            the city to set
+	 */
+	public void setCity(String city) {
 		this.city = city;
 	}
 
-	public String getState() 
-	{
+	/**
+	 * @return the state
+	 */
+	public String getState() {
 		return state;
 	}
 
-	public void setState(String state) 
-	{
+	/**
+	 * @param state
+	 *            the state to set
+	 */
+	public void setState(String state) {
 		this.state = state;
 	}
 
-	public String getZip() 
-	{
+	/**
+	 * @return the zip
+	 */
+	public String getZip() {
 		return zip;
 	}
 
-	public void setZip(String zip) 
-	{
+	/**
+	 * @param zip
+	 *            the zip to set
+	 */
+	public void setZip(String zip) {
 		this.zip = zip;
 	}
 
-	public String getPhoneNumber()
-	{
+	/**
+	 * @return the phoneNumber
+	 */
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(String phoneNumber)
-	{
+	/**
+	 * @param phoneNumber
+	 *            the phoneNumber to set
+	 */
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getEmail()
-	{
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email)
-	{
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
 	@Override
-	public String toString()
-	{
-		return "First Name = " + firstName + ", Last Name = " + lastName
-				+ ", Address = " + address + ", City = " + city + ", State = "
-				+ state + ", Zip = " + zip + ", Phone Number = " + phoneNumber
-				+ ", Email = " + email + "";
+	public String toString() {
+		return "First Name = " + firstName + ", Last Name = " + lastName + ", Address = " + address + ", City = " + city
+				+ ", State = " + state + ", Zip = " + zip + ", Phone Number = " + phoneNumber + ", Email = " + email
+				+ "";
 	}
+
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ContactDetails other = (ContactDetails) obj;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName)) 
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		return true;
+	}
+	
+	
 
 }

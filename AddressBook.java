@@ -1,7 +1,12 @@
 package com.addressbook;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * @author Tarun Vyda
@@ -21,8 +26,10 @@ public class AddressBook {
 	 */
 	private static void addressBookOperation(Scanner scanner) {
 		System.out.println("Press 1 to Add an address book");
-		System.out.println("Press 2 to View all address book");
+		System.out.println("Press 2 to View all address books");
 		System.out.println("Press 3 to do operation in an address book");
+		System.out.println("Press 4 to search by City in all address books");
+		System.out.println("Press 5 to search by state in all address books");
 		Map<String, ContactDetails> addressBook = new HashMap<>();
 		//
 		int res = Integer.parseInt(scanner.nextLine());
@@ -51,21 +58,50 @@ public class AddressBook {
 			String bookName = scanner.nextLine();
 			if (addressBooksMap.containsKey(bookName)) {
 				addressBook = addressBooksMap.get(bookName);
-				ContactsOperation(scanner, addressBook);
+				ContactsOperation(scanner, addressBook, bookName);
 			} else {
 				System.out.println("Contact does not exist");
 				addressBookOperation(scanner);
 			}
+		} else if (res == 4) {
+			System.out.println("Enter city name");
+			String city = scanner.nextLine();
+			System.out.println(searchPersonInCity(city, addressBooksMap));
+			addressBookOperation(scanner);
+		} else if (res == 5) {
+			System.out.println("Enter state name");
+			String state = scanner.nextLine();
+			System.out.println(searchPersonInState(state, addressBooksMap));
+			addressBookOperation(scanner);
 		} else {
 			addressBookOperation(scanner);
 		}
+	}
+
+	private static List<ContactDetails> searchPersonInState(String state,
+			Map<String, Map<String, ContactDetails>> addressBooks) {
+		ArrayList<ContactDetails> allContacts = new ArrayList<ContactDetails>();
+		for (Map<String, ContactDetails> book : addressBooks.values()) {
+			allContacts.addAll(book.values());
+		}
+		return allContacts.stream().filter(contacts -> contacts.getState().equals(state)).collect(Collectors.toList());
+	}
+
+	private static List<ContactDetails> searchPersonInCity(String city,
+			Map<String, Map<String, ContactDetails>> addressBooks) {
+		ArrayList<ContactDetails> allContacts = new ArrayList<ContactDetails>();
+		for (Map<String, ContactDetails> book : addressBooks.values()) {
+			allContacts.addAll(book.values());
+		}
+		return allContacts.stream().filter(contacts -> contacts.getCity().equals(city)).collect(Collectors.toList());
+
 	}
 
 	/**
 	 * @param scanner
 	 * @param addressBook
 	 */
-	private static void ContactsOperation(Scanner scanner, Map<String, ContactDetails> addressBook) {
+	private static void ContactsOperation(Scanner scanner, Map<String, ContactDetails> addressBook, String bookName) {
 		System.out.println("Press 1 to Add a new contact");
 		System.out.println("Press 2 to Edit an existing contact");
 		System.out.println("Press 3 to Delete contact");
@@ -75,16 +111,16 @@ public class AddressBook {
 
 		switch (choice) {
 		case 1:
-			addContact(scanner, addressBook);
+			addContact(scanner, addressBook, bookName);
 			break;
 		case 2:
-			editContact(scanner, addressBook);
+			editContact(scanner, addressBook, bookName);
 			break;
 		case 3:
-			deleteContact(scanner, addressBook);
+			deleteContact(scanner, addressBook, bookName);
 			break;
 		case 4:
-			viewAllContacts(scanner, addressBook, "contactop");
+			viewAllContacts(scanner, addressBook, "contactop", bookName);
 			break;
 		case 5:
 			addressBookOperation(scanner);
@@ -98,28 +134,31 @@ public class AddressBook {
 	/**
 	 * @param scanner
 	 * @param addressBook
+	 * @param bookName
 	 */
-	private static void viewAllContacts(Scanner scanner, Map<String, ContactDetails> addressBook, String operation) {
+	private static void viewAllContacts(Scanner scanner, Map<String, ContactDetails> addressBook, String operation,
+			String bookName) {
 		if (addressBook.isEmpty() || addressBook == null) {
 			System.out.println("No contacts to view");
-			ContactsOperation(scanner, addressBook);
+			ContactsOperation(scanner, addressBook, bookName);
 		} else {
 			for (Entry<String, ContactDetails> s : addressBook.entrySet()) {
 				System.out.println(s);
 			}
 		}
 		if (operation == "contactop") {
-			ContactsOperation(scanner, addressBook);
+			ContactsOperation(scanner, addressBook, bookName);
 		}
 	}
 
 	/**
 	 * @param scanner
 	 * @param addressBook
+	 * @param bookName
 	 */
-	private static void editContact(Scanner scanner, Map<String, ContactDetails> addressBook) {
+	private static void editContact(Scanner scanner, Map<String, ContactDetails> addressBook, String bookName) {
 		System.out.println("Please select name from the below list to edit contact details of the individual.");
-		viewAllContacts(scanner, addressBook, "editContactop");
+		viewAllContacts(scanner, addressBook, "editContactop", bookName);
 		System.out.println("Enter the first name and last name of the person to edit");
 		System.out.println("Enter First Name");
 		String firstName = scanner.nextLine();
@@ -169,9 +208,9 @@ public class AddressBook {
 		if (inp == 0) {
 			addressBookOperation(scanner);
 		} else if (inp == 1) {
-			ContactsOperation(scanner, addressBook);
+			ContactsOperation(scanner, addressBook, bookName);
 		} else if (inp == 2) {
-			editContact(scanner, addressBook);
+			editContact(scanner, addressBook, bookName);
 		}
 
 	}
@@ -180,7 +219,7 @@ public class AddressBook {
 	 * @param scanner
 	 * @param addressBook
 	 */
-	private static void addContact(Scanner scanner, Map<String, ContactDetails> addressBook) {
+	private static void addContact(Scanner scanner, Map<String, ContactDetails> addressBook, String bookName) {
 		System.out.println("Enter firstName");
 		String firstName = scanner.nextLine();
 		System.out.println("Enter lastName");
@@ -207,6 +246,7 @@ public class AddressBook {
 		add.setZip(zip);
 		add.setPhoneNumber(phoneNumber);
 		add.setEmail(email);
+		add.setAddressBookName(bookName);
 
 		ArrayList<ContactDetails> contactDetailsList = new ArrayList<ContactDetails>(addressBook.values());
 
@@ -223,19 +263,20 @@ public class AddressBook {
 		if (inp == 0) {
 			addressBookOperation(scanner);
 		} else if (inp == 1) {
-			ContactsOperation(scanner, addressBook);
+			ContactsOperation(scanner, addressBook, bookName);
 		} else if (inp == 2) {
-			addContact(scanner, addressBook);
+			addContact(scanner, addressBook, bookName);
 		}
 	}
 
 	/**
 	 * @param scanner
 	 * @param addressBook
+	 * @param bookName
 	 */
-	private static void deleteContact(Scanner scanner, Map<String, ContactDetails> addressBook) {
+	private static void deleteContact(Scanner scanner, Map<String, ContactDetails> addressBook, String bookName) {
 		System.out.println("Please select name from the below list to delete contact details of the individual.");
-		viewAllContacts(scanner, addressBook, "deleteContactop");
+		viewAllContacts(scanner, addressBook, "deleteContactop", bookName);
 		System.out.println("Enter the first name and last name of the person to delete contact");
 		System.out.println("Enter First Name");
 		String firstName = scanner.nextLine();
@@ -260,9 +301,9 @@ public class AddressBook {
 		if (inp == 0) {
 			addressBookOperation(scanner);
 		} else if (inp == 1) {
-			ContactsOperation(scanner, addressBook);
+			ContactsOperation(scanner, addressBook, bookName);
 		} else if (inp == 2) {
-			deleteContact(scanner, addressBook);
+			deleteContact(scanner, addressBook, bookName);
 		}
 	}
 

@@ -20,6 +20,8 @@ public class ContactDetails {
 	private String phoneNumber;
 
 	private String email;
+	
+	private String addressBookName;
 
 	/**
 	 * @return the firstName
@@ -140,11 +142,25 @@ public class ContactDetails {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	/**
+	 * @return the addressBookName
+	 */
+	public String getAddressBookName() {
+		return addressBookName;
+	}
+
+	/**
+	 * @param addressBookName the addressBookName to set
+	 */
+	public void setAddressBookName(String addressBookName) {
+		this.addressBookName = addressBookName;
+	}
 
 	@Override
 	public String toString() {
-		return "First Name = " + firstName + ", Last Name = " + lastName + ", Address = " + address + ", City = " + city
-				+ ", State = " + state + ", Zip = " + zip + ", Phone Number = " + phoneNumber + ", Email = " + email
+		return ", Address Book = " + addressBookName +" => First Name = " + firstName + ", Last Name = " + lastName + ", Address = " + address + ", City = " + city
+				+ ", State = " + state + ", Zip = " + zip + ", Phone Number = " + phoneNumber + ", Email = " + email  
 				+ "";
 	}
 

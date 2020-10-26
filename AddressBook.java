@@ -36,9 +36,11 @@ public class AddressBook {
 		System.out.println("Press 7 to count person by city");
 		Map<String, ContactDetails> addressBook = new HashMap<>();
 		//
-		int res = Integer.parseInt(scanner.nextLine());
+		int choice = Integer.parseInt(scanner.nextLine());
 
-		if (res == 1) {
+		switch (choice) {
+
+		case 1:
 			System.out.println("Enter Address book name");
 			String bookName = scanner.nextLine();
 			if (addressBooksMap.containsKey(bookName)) {
@@ -48,7 +50,7 @@ public class AddressBook {
 				addressBooksMap.put(bookName, addressBook);
 			}
 			addressBookOperation(scanner);
-		} else if (res == 2) {
+		case 2:
 			if (addressBooksMap.isEmpty() || addressBooksMap == null) {
 				System.out.println("No book to view");
 			} else {
@@ -57,9 +59,9 @@ public class AddressBook {
 				}
 			}
 			addressBookOperation(scanner);
-		} else if (res == 3) {
+		case 3:
 			System.out.println("Enter Address book name");
-			String bookName = scanner.nextLine();
+			bookName = scanner.nextLine();
 			if (addressBooksMap.containsKey(bookName)) {
 				addressBook = addressBooksMap.get(bookName);
 				ContactsOperation(scanner, addressBook, bookName);
@@ -67,23 +69,23 @@ public class AddressBook {
 				System.out.println("Contact does not exist");
 				addressBookOperation(scanner);
 			}
-		} else if (res == 4) {
+		case 4:
 			System.out.println("Enter city name");
 			String city = scanner.nextLine();
 			System.out.println(searchPersonInCity(city));
 			addressBookOperation(scanner);
-		} else if (res == 5) {
+		case 5:
 			System.out.println("Enter state name");
 			String state = scanner.nextLine();
 			System.out.println(searchPersonInState(state));
 			addressBookOperation(scanner);
-		} else if (res == 6) {
+		case 6:
 			countPersonsByState();
 			addressBookOperation(scanner);
-		} else if (res == 7) {
+		case 7:
 			countPersonsByCity();
 			addressBookOperation(scanner);
-		} else {
+		default:
 			addressBookOperation(scanner);
 		}
 	}
@@ -107,7 +109,7 @@ public class AddressBook {
 
 	}
 
-	public static Map<String, List<ContactDetails>> personsByState = new HashMap<>();
+	public static Map<String, List<ContactDetails>> personsByState = new TreeMap<>();
 
 	// uc9
 	private static Map<String, List<ContactDetails>> viewPersonsByState() {
@@ -120,7 +122,7 @@ public class AddressBook {
 		return personsByCity;
 	}
 
-	public static Map<String, List<ContactDetails>> personsByCity = new HashMap<>();
+	public static Map<String, List<ContactDetails>> personsByCity = new TreeMap<>();
 
 	private static Map<String, List<ContactDetails>> viewPersonsByCity() {
 		ArrayList<ContactDetails> cityDetails = new ArrayList<>();
@@ -156,8 +158,11 @@ public class AddressBook {
 		System.out.println("Press 2 to Edit an existing contact");
 		System.out.println("Press 3 to Delete contact");
 		System.out.println("Press 4 to View All contact");
-		System.out.println("Press 5 to View All contact in sorted order");
-		System.out.println("Press 6 for main menu");
+		System.out.println("Press 5 to View All contact sorted by name");
+		System.out.println("Press 6 for View All contact sorted by city");
+		System.out.println("Press 7 for View All contact sorted by state");
+		System.out.println("Press 8 for View All contact sorted by zip code");
+		System.out.println("Press 9 for main menu");
 		int choice = Integer.parseInt(scanner.nextLine());
 
 		switch (choice) {
@@ -177,10 +182,88 @@ public class AddressBook {
 			viewAllContactsSortedByName(scanner, addressBook, bookName);
 			break;
 		case 6:
+			viewAllContactsSortedByCity(scanner, addressBook, bookName);
+			break;
+		case 7:
+			viewAllContactsSortedByState(scanner, addressBook, bookName);
+			break;
+		case 8:
+			viewAllContactsSortedByZip(scanner, addressBook, bookName);
+			break;
+		case 9:
 			addressBookOperation(scanner);
 			break;
 		default:
 			System.out.println("Incorrect Selection");
+		}
+
+	}
+
+	//uc12
+	private static void viewAllContactsSortedByState(Scanner scanner, Map<String, ContactDetails> addressBook,
+			String bookName) {
+
+		ArrayList<ContactDetails> contactList = new ArrayList<>();
+		System.out.println("Sorting current address book by state: ");
+		for (Map<String, ContactDetails> book : addressBooksMap.values()) {
+			contactList.addAll(book.values());
+		}
+		contactList.stream().sorted((a, b) -> a.getState().compareTo(b.getState())).forEachOrdered(System.out::println);
+		System.out.println("Press 0 for main menu");
+		System.out.println("Press 1 for submain menu");
+		int input = Integer.parseInt(scanner.nextLine());
+		if (input == 0) {
+			addressBookOperation(scanner);
+		} else if (input == 1) {
+			ContactsOperation(scanner, addressBook, bookName);
+		} else {
+			System.out.println("invalid input going back to main menu");
+			addressBookOperation(scanner);
+		}
+	}
+
+	private static void viewAllContactsSortedByCity(Scanner scanner, Map<String, ContactDetails> addressBook,
+			String bookName) {
+
+		ArrayList<ContactDetails> contactList = new ArrayList<>();
+		System.out.println("Sorting current address book by state: ");
+		for (Map<String, ContactDetails> book : addressBooksMap.values()) {
+			contactList.addAll(book.values());
+		}
+		contactList.stream().sorted((a, b) -> a.getCity().compareTo(b.getCity())).forEachOrdered(System.out::println);
+		System.out.println("Press 0 for main menu");
+		System.out.println("Press 1 for submain menu");
+		int input = Integer.parseInt(scanner.nextLine());
+		if (input == 0) {
+			addressBookOperation(scanner);
+		} else if (input == 1) {
+			ContactsOperation(scanner, addressBook, bookName);
+		} else {
+			System.out.println("invalid input going back to main menu");
+			addressBookOperation(scanner);
+		}
+
+	}
+
+	private static void viewAllContactsSortedByZip(Scanner scanner, Map<String, ContactDetails> addressBook,
+			String bookName) {
+
+		ArrayList<ContactDetails> contactList = new ArrayList<>();
+		System.out.println("Sorting current address book by zip code: ");
+		for (Map<String, ContactDetails> book : addressBooksMap.values()) {
+			contactList.addAll(book.values());
+		}
+		contactList.stream().sorted((a, b) -> a.getZip().compareTo(b.getZip())).forEachOrdered(System.out::println);
+		System.out.println("Press 0 for main menu");
+		System.out.println("Press 1 for submain menu");
+		int input = Integer.parseInt(scanner.nextLine());
+		if (input == 0) {
+			addressBookOperation(scanner);
+		} else if (input == 1) {
+			ContactsOperation(scanner, addressBook, bookName);
+		} else {
+			System.out.println("invalid input going back to main menu");
+			addressBookOperation(scanner);
 		}
 
 	}

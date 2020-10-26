@@ -66,35 +66,60 @@ public class AddressBook {
 		} else if (res == 4) {
 			System.out.println("Enter city name");
 			String city = scanner.nextLine();
-			System.out.println(searchPersonInCity(city, addressBooksMap));
+			System.out.println(searchPersonInCity(city));
 			addressBookOperation(scanner);
 		} else if (res == 5) {
 			System.out.println("Enter state name");
 			String state = scanner.nextLine();
-			System.out.println(searchPersonInState(state, addressBooksMap));
+			System.out.println(searchPersonInState(state));
 			addressBookOperation(scanner);
 		} else {
 			addressBookOperation(scanner);
 		}
 	}
 
-	private static List<ContactDetails> searchPersonInState(String state,
-			Map<String, Map<String, ContactDetails>> addressBooks) {
+	private static List<ContactDetails> searchPersonInState(String state) {
+
 		ArrayList<ContactDetails> allContacts = new ArrayList<ContactDetails>();
-		for (Map<String, ContactDetails> book : addressBooks.values()) {
+		for (Map<String, ContactDetails> book : addressBooksMap.values()) {
 			allContacts.addAll(book.values());
 		}
 		return allContacts.stream().filter(contacts -> contacts.getState().equals(state)).collect(Collectors.toList());
 	}
 
-	private static List<ContactDetails> searchPersonInCity(String city,
-			Map<String, Map<String, ContactDetails>> addressBooks) {
+	private static List<ContactDetails> searchPersonInCity(String city) {
 		ArrayList<ContactDetails> allContacts = new ArrayList<ContactDetails>();
-		for (Map<String, ContactDetails> book : addressBooks.values()) {
+		for (Map<String, ContactDetails> book : addressBooksMap.values()) {
 			allContacts.addAll(book.values());
 		}
+
 		return allContacts.stream().filter(contacts -> contacts.getCity().equals(city)).collect(Collectors.toList());
 
+	}
+
+	public static Map<String, List<ContactDetails>> personsByState = new HashMap<>();
+
+	// uc9
+	private static Map<String, List<ContactDetails>> viewPersonsByState() {
+		ArrayList<ContactDetails> stateDetails = new ArrayList<>();
+		for (Map<String, ContactDetails> book : addressBooksMap.values()) {
+			stateDetails.addAll(book.values());
+		}
+		stateDetails.stream()
+				.forEach(contact -> personsByCity.put(contact.getState(), searchPersonInState(contact.getState())));
+		return personsByCity;
+	}
+
+	public static Map<String, List<ContactDetails>> personsByCity = new HashMap<>();
+
+	private static Map<String, List<ContactDetails>> viewPersonsByCity() {
+		ArrayList<ContactDetails> cityDetails = new ArrayList<>();
+		for (Map<String, ContactDetails> book : addressBooksMap.values()) {
+			cityDetails.addAll(book.values());
+		}
+		cityDetails.stream()
+				.forEach(contact -> personsByCity.put(contact.getCity(), searchPersonInCity(contact.getCity())));
+		return personsByCity;
 	}
 
 	/**

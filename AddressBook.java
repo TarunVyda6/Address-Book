@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -155,7 +156,8 @@ public class AddressBook {
 		System.out.println("Press 2 to Edit an existing contact");
 		System.out.println("Press 3 to Delete contact");
 		System.out.println("Press 4 to View All contact");
-		System.out.println("Press 5 for main menu");
+		System.out.println("Press 5 to View All contact in sorted order");
+		System.out.println("Press 6 for main menu");
 		int choice = Integer.parseInt(scanner.nextLine());
 
 		switch (choice) {
@@ -169,9 +171,12 @@ public class AddressBook {
 			deleteContact(scanner, addressBook, bookName);
 			break;
 		case 4:
-			viewAllContacts(scanner, addressBook, "contactop", bookName);
+			viewAllContacts(scanner, addressBook, bookName);
 			break;
 		case 5:
+			viewAllContactsSortedByName(scanner, addressBook, bookName);
+			break;
+		case 6:
 			addressBookOperation(scanner);
 			break;
 		default:
@@ -185,17 +190,37 @@ public class AddressBook {
 	 * @param addressBook
 	 * @param bookName
 	 */
-	private static void viewAllContacts(Scanner scanner, Map<String, ContactDetails> addressBook, String operation,
+	private static void viewAllContacts(Scanner scanner, Map<String, ContactDetails> addressBook, String bookName) {
+		if (addressBook.isEmpty() || addressBook == null) {
+			System.out.println("No contacts to view");
+			ContactsOperation(scanner, addressBook, bookName);
+		} else {
+			for (Entry<String, ContactDetails> set : addressBook.entrySet()) {
+				System.out.println(set);
+			}
+		}
+
+	}
+
+	/**
+	 * @param scanner
+	 * @param addressBook
+	 * @param bookName
+	 */
+
+	// uc11
+	private static void viewAllContactsSortedByName(Scanner scanner, Map<String, ContactDetails> addressBook,
 			String bookName) {
 		if (addressBook.isEmpty() || addressBook == null) {
 			System.out.println("No contacts to view");
 			ContactsOperation(scanner, addressBook, bookName);
 		} else {
-			for (Entry<String, ContactDetails> s : addressBook.entrySet()) {
-				System.out.println(s);
+			Map<String, ContactDetails> sortedAddressBook = new TreeMap<>();
+
+			sortedAddressBook.putAll(addressBook);
+			for (Entry<String, ContactDetails> set : sortedAddressBook.entrySet()) {
+				System.out.println(set);
 			}
-		}
-		if (operation == "contactop") {
 			ContactsOperation(scanner, addressBook, bookName);
 		}
 	}
@@ -207,7 +232,7 @@ public class AddressBook {
 	 */
 	private static void editContact(Scanner scanner, Map<String, ContactDetails> addressBook, String bookName) {
 		System.out.println("Please select name from the below list to edit contact details of the individual.");
-		viewAllContacts(scanner, addressBook, "editContactop", bookName);
+		viewAllContacts(scanner, addressBook, bookName);
 		System.out.println("Enter the first name and last name of the person to edit");
 		System.out.println("Enter First Name");
 		String firstName = scanner.nextLine();
@@ -324,7 +349,7 @@ public class AddressBook {
 	 */
 	private static void deleteContact(Scanner scanner, Map<String, ContactDetails> addressBook, String bookName) {
 		System.out.println("Please select name from the below list to delete contact details of the individual.");
-		viewAllContacts(scanner, addressBook, "deleteContactop", bookName);
+		viewAllContacts(scanner, addressBook, bookName);
 		System.out.println("Enter the first name and last name of the person to delete contact");
 		System.out.println("Enter First Name");
 		String firstName = scanner.nextLine();

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +31,8 @@ public class AddressBook {
 		System.out.println("Press 3 to do operation in an address book");
 		System.out.println("Press 4 to search by City in all address books");
 		System.out.println("Press 5 to search by state in all address books");
+		System.out.println("Press 6 to count persons by state");
+		System.out.println("Press 7 to count person by city");
 		Map<String, ContactDetails> addressBook = new HashMap<>();
 		//
 		int res = Integer.parseInt(scanner.nextLine());
@@ -72,6 +75,12 @@ public class AddressBook {
 			System.out.println("Enter state name");
 			String state = scanner.nextLine();
 			System.out.println(searchPersonInState(state));
+			addressBookOperation(scanner);
+		} else if (res == 6) {
+			countPersonsByState();
+			addressBookOperation(scanner);
+		} else if (res == 7) {
+			countPersonsByCity();
 			addressBookOperation(scanner);
 		} else {
 			addressBookOperation(scanner);
@@ -120,6 +129,21 @@ public class AddressBook {
 		cityDetails.stream()
 				.forEach(contact -> personsByCity.put(contact.getCity(), searchPersonInCity(contact.getCity())));
 		return personsByCity;
+	}
+
+	// uc10
+	public static void countPersonsByState() {
+		Set<String> countByState = viewPersonsByState().keySet();
+
+		countByState.stream().forEach(state -> System.out
+				.println(state + " has " + viewPersonsByState().get(state).stream().count() + " persons."));
+	}
+
+	public static void countPersonsByCity() {
+		Set<String> countByCity = viewPersonsByCity().keySet();
+
+		countByCity.stream().forEach(city -> System.out
+				.println(city + " has " + viewPersonsByCity().get(city).stream().count() + " persons."));
 	}
 
 	/**
@@ -190,7 +214,6 @@ public class AddressBook {
 		System.out.println("Enter Last Name");
 		String lastName = scanner.nextLine();
 		if (addressBook.containsKey(firstName + lastName)) {
-			// result="Name already exits!";
 			ContactDetails editObj = addressBook.get(firstName + lastName);
 			System.out.println(
 					"Press 1 to edit address, 2 to edit city, 3 to edit state, 4 to edit zip, 5 to edit phone number, 6 to edit email, 0 to cancel editing");

@@ -52,6 +52,22 @@ public class AddressBookFileOperations
 			}
 		}
 
+		else if (type.equals("csv"))
+		{
+			try (Reader reader = Files.newBufferedReader(Paths.get(CSV_FILE)))
+			{
+				CsvToBeanBuilder<ContactDetails> builder = new CsvToBeanBuilder<ContactDetails>(reader);
+				CsvToBean<ContactDetails> csvToBean = builder.withType(ContactDetails.class)
+						.withIgnoreLeadingWhiteSpace(true).build();
+				List<ContactDetails> contacts = csvToBean.parse();
+				System.out.println(contacts);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	/**
@@ -84,6 +100,39 @@ public class AddressBookFileOperations
 			}
 		}
 
+		else if (fileType.equals("CSV"))
+		{
+
+			List<ContactDetails> contacts = mapToListConverter(addressBooksMap);
+
+			try (Writer writer = Files.newBufferedWriter(Paths.get(CSV_FILE)))
+			{
+				StatefulBeanToCsv<ContactDetails> beanToCsv = new StatefulBeanToCsvBuilder<ContactDetails>(writer)
+						.withQuotechar(CSVWriter.NO_QUOTE_CHARACTER).build();
+				beanToCsv.write(contacts);
+				System.out.println("csv file successfully saved");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+
+			}
+
+		}
+
+	}
+
+	/**
+	 * @param addressBooksMap to list conversion
+	 * @return list of contact details
+	 */
+	public static List<ContactDetails> mapToListConverter(Map<String, Map<String, ContactDetails>> addressBooksMap)
+	{
+		List<ContactDetails> contacts = new ArrayList<ContactDetails>();
+		addressBooksMap.forEach((k, v) -> {
+			contacts.addAll(v.values());
+		});
+		return contacts;
 	}
 
 }

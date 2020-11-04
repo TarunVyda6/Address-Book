@@ -134,11 +134,16 @@ public class AddressBook
 				addressBookOperation(scanner);
 			case 9:
 				System.out.println("press 1 to read txt file");
-
+				System.out.println("press 2 to read csv file");
 				int selection = Integer.parseInt(scanner.nextLine());
 				if (selection == 1)
 				{
 					AddressBookFileOperations.addressBookReadText("txt");
+				}
+
+				else if (selection == 2)
+				{
+					AddressBookFileOperations.addressBookReadText("csv");
 				}
 				addressBookOperation(scanner);
 			case 0:

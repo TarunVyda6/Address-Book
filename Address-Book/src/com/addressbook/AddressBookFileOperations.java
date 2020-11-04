@@ -68,6 +68,30 @@ public class AddressBookFileOperations
 			}
 		}
 
+		else if (type.equals("json"))
+		{
+			Gson gson = new Gson();
+			try
+			{
+				BufferedReader bufferedReader = new BufferedReader(new FileReader(JSON_FILE));
+				JsonStreamParser parser = new JsonStreamParser(bufferedReader);
+				while (parser.hasNext())
+				{
+					JsonElement json = parser.next();
+					if (json.isJsonObject())
+					{
+						ContactDetails person = gson.fromJson(json, ContactDetails.class);
+						System.out.println(person);
+					}
+				}
+
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	/**
@@ -116,6 +140,27 @@ public class AddressBookFileOperations
 			{
 				e.printStackTrace();
 
+			}
+
+		}
+
+		else if (fileType.equals("JSON"))
+		{
+			List<ContactDetails> contacts = mapToListConverter(addressBooksMap);
+
+			Writer writer;
+			try
+			{
+				writer = Files.newBufferedWriter(Paths.get(JSON_FILE));
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				gson.toJson(contacts, writer);
+				writer.flush();
+				writer.close();
+				System.out.println("json file successfully saved");
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
 			}
 
 		}

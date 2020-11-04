@@ -135,6 +135,7 @@ public class AddressBook
 			case 9:
 				System.out.println("press 1 to read txt file");
 				System.out.println("press 2 to read csv file");
+				System.out.println("press 3 to read json file");
 				int selection = Integer.parseInt(scanner.nextLine());
 				if (selection == 1)
 				{
@@ -145,6 +146,12 @@ public class AddressBook
 				{
 					AddressBookFileOperations.addressBookReadText("csv");
 				}
+
+				else if (selection == 3)
+				{
+					AddressBookFileOperations.addressBookReadText("json");
+				}
+
 				addressBookOperation(scanner);
 			case 0:
 				break;
